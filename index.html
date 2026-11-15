@@ -1,0 +1,41 @@
+
+import json
+import os
+import urllib.request
+
+BOT_TOKEN = os.environ["BOT_TOKEN"]
+CHANNEL_ID = os.environ["CHANNEL_ID"]
+
+questions = [
+    {
+        "question": "భారత రాజ్యాంగంలోని ఆర్టికల్ 32 దేనికి సంబంధించినది?",
+        "options": [
+            "సమానత్వ హక్కు",
+            "రాజ్యాంగ పరిహార హక్కు",
+            "విద్యా హక్కు",
+            "మత స్వేచ్ఛ"
+        ],
+        "correct": 1,
+        "explanation": "ఆర్టికల్ 32 రాజ్యాంగ పరిహార హక్కును కల్పిస్తుంది."
+    }
+]
+
+for q in questions:
+    data = {
+        "chat_id": CHANNEL_ID,
+        "question": q["question"],
+        "options": q["options"],
+        "type": "quiz",
+        "correct_option_id": q["correct"],
+        "explanation": q["explanation"]
+    }
+
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendPoll"
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(data).encode("utf-8"),
+        headers={"Content-Type": "application/json"}
+    )
+
+    with urllib.request.urlopen(request) as response:
+        print(response.read().decode())
